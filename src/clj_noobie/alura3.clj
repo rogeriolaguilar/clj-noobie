@@ -1,73 +1,21 @@
 (ns clj_noobie.alura3
-  (:require [clj_noobie.db :as n.db]))
+  (:require [clj_noobie.db :as n.db]
+            [clj_noobie.logic :as l.logic]))
 
 (println (n.db/all-orders))
 
-; grouping order by user
-(group-by :user (n.db/all-orders))
-
-(defn count-orders-by-user
- [[user orders]]
- {:user-id user
-  :orders-count  (count orders)})
-
-; count order by user
-(map count-orders-by-user
-     (group-by :user
-               (n.db/all-orders)))
-; or
-(->> (n.db/all-orders)
-     (group-by :user)
-     (map count-orders-by-user))
+(l.logic/user-resume (n.db/all-orders))
 
 
+(let [orders (n.db/all-orders)
+      resume (l.logic/user-resume orders)]
+  (println "Resume" resume)
+  (println "Order by price" (sort-by :total-price resume))
+  (println "Order by price reversed" (reverse (sort-by :total-price resume)))
 
-(defn total-price-per-item
-  [item]
-  (* (get item :qtd 0) (get item :unit-price 0)))
+  (println "Orders" orders)
+  (println "Get-in sample:" (get-in orders [0 :items :mochila :qtd]))
 
-; test
-(total-price-per-item {:id :mochila, :qtd 2, :unit-price 80})
-(total-price-per-item {:id :tenis, :qtd 1})
-
-
-(defn total-price-per-order
-  [order]
-  (->>
-    (vals order)
-    (map total-price-per-item)
-    (reduce +)))
-
-; test
-(total-price-per-order {:mochila  {:id :mochila, :qtd 2, :unit-price 80},
-                        :camiseta {:id :camiseta, :qtd 3, :unit-price 40},
-                        :tenis    {:id :tenis, :qtd 1}})
-
-(defn total-price
-  [orders]
-  (->> orders
-       (map :items)
-       (map total-price-per-order)
-       (reduce +)))
-
-; test
-(total-price [{:user 15,
-               :items {:mochila {:id :mochila, :qtd 2, :unit-price 80},
-                       :camiseta {:id :camiseta, :qtd 3, :unit-price 40},
-                       :tenis {:id :tenis, :qtd 1}}}
-              {:user 15,
-               :items {:mochila {:id :mochila, :qtd 3, :unit-price 80},
-                       :camiseta {:id :camiseta, :qtd 3, :unit-price 40},
-                       :tenis {:id :tenis, :qtd 1}}}])
-
-
-(defn orders-and-total-price-by-user
-  [[user orders]]
-  {:user-id user
-  :orders-count (count orders)
-  :total-price (total-price orders)})
-
-; test
-(->> (n.db/all-orders)
-     (group-by :user)
-     (map orders-and-total-price-by-user))
+  (println "Resume filtering more than $600:" (filter #(> (:total-price %) 600) resume))
+  (println "Resume some more than $600:" (some #(> (:total-price %) 600) resume))
+  )
