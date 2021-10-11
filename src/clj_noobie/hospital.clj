@@ -89,14 +89,14 @@
 
 (defn simulate-concurrent-atom
   []
-  (let [hospital-atom (atom (h.model/new-hospital))]
-    (pprint ())
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N1"))))
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N2"))))
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N3"))))
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N4"))))
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N5"))))
-    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N6"))))
+  (let [hospital-atom (atom (h.model/new-hospital))
+        people ["N1" "N2" "N3" "N4" "N5" "N6"]]
+
+    (defn check-in-thread [person]
+      (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom person)))))
+
+    ; using mapv because map is lazy
+    (mapv check-in-thread people)
 
     (Thread/sleep (* 7 100))
     (println "Final hospital")
