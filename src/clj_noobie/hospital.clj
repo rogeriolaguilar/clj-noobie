@@ -44,4 +44,35 @@
   hospital
   )
 
-(pprint (simulate-concurrent-call))
+;(pprint (simulate-concurrent-call))
+
+
+; ####### ATOM and SWAP
+
+(defn test-atom
+  []
+  (let [hospital-atom (atom (h.model/new-hospital))]
+    (println hospital-atom)
+
+
+    (println ">>> Initial ATOM")
+    (pprint hospital-atom)
+
+    (println ">>> DEREF the ATOM")
+    (pprint (deref hospital-atom))
+
+    (println " >>> Checking in waiting-room. It returns a new hospital.")
+    (pprint (h.logic/check-in (deref hospital-atom) :waiting-room "Person 1"))
+
+    (println ">>> But it does not change the atom!")
+    (pprint (deref hospital-atom))
+
+    (println ">>> Changing data in the atom with swap!")
+    (swap! hospital-atom h.logic/check-in :waiting-room "Person Swap 1")
+    (swap! hospital-atom h.logic/check-in :waiting-room "Person Swap 2")
+    (pprint hospital-atom)
+
+    (println ">>> FINAL hospital")
+    (pprint (deref hospital-atom))))
+
+(test-atom)

@@ -6,7 +6,7 @@
         queue-size (count queue)
         max-size? (> queue-size 5)]
 
-    (println "Queue size" queue-size "Max size?" max-size?)
+    ;(println "Queue size" queue-size "Max size?" max-size?)
     (Thread/sleep (rand 100))
     (if max-size?
       (do
