@@ -19,7 +19,7 @@
   hospital
   )
 ; run to  test
-(pprint (simulate-hospital))
+;(pprint (simulate-hospital))
 
 
 (defn redefine-hospital [value]
@@ -75,4 +75,34 @@
     (println ">>> FINAL hospital")
     (pprint (deref hospital-atom))))
 
-(test-atom)
+;(test-atom)
+
+
+; Simulate Threads using ATOM
+(println "######## Simulate Threads using ATOM ###########")
+
+(defn redefine-hospital-swap! [hospital-atom value]
+  (swap! hospital-atom h.logic/check-in :waiting-room value)
+  (println ">>>Hospital after swap!" value)
+  (pprint (:waiting-room (deref hospital-atom)))
+  hospital-atom)
+
+(defn simulate-concurrent-atom
+  []
+  (let [hospital-atom (atom (h.model/new-hospital))]
+    (pprint ())
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N1"))))
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N2"))))
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N3"))))
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N4"))))
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N5"))))
+    (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom "N6"))))
+
+    (Thread/sleep (* 7 100))
+    (println "Final hospital")
+    (pprint (deref hospital-atom))))
+
+(simulate-concurrent-atom)
+
+(println "In the prints its possible to see the retries performed by the swap! operation and one the atom has changed before the operation has finished")
+
