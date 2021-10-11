@@ -11,7 +11,7 @@
     (Thread/sleep (rand 100))
     (if max-size?
       (do
-       (println ">>>> Queue" queue-name "reach max size" queue-size)
+       (println ">>>> The maximum size (" queue-size ") of the queue" queue-name "has been reached!!!!")
        hospital
        )
       (do

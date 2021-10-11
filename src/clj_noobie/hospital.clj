@@ -95,8 +95,8 @@
     (defn check-in-thread [person]
       (.start (Thread. (fn [] (redefine-hospital-swap! hospital-atom person)))))
 
-    ; using mapv because map is lazy
-    (mapv check-in-thread people)
+    (doseq [person people]
+      (check-in-thread person))
 
     (Thread/sleep (* 7 100))
     (println "Final hospital")
