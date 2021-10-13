@@ -1,6 +1,7 @@
 (ns clj-noobie.tests.logic-test
   (:require [clojure.test :refer :all]
-            [clj-noobie.tests.logic :refer :all]))
+            [clj-noobie.tests.logic :refer :all])
+  (:import (clojure.lang ExceptionInfo)))
 
 (deftest queue-has-space?-test
   (testing "there is space in the queue"
@@ -25,6 +26,15 @@
            (check-in {:waiting-room [1 2 3]} :not-existent-key :foo))))
 
   (testing "check-in when the department has not space"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"not space"
-                          (check-in {:waiting-room [1 2 3 4 5]} :waiting-room 6)))))
+    (is (thrown-with-msg? ExceptionInfo #"not space"
+                          (check-in {:waiting-room [1 2 3 4 5]} :waiting-room 6))))
+
+  (testing "check-in thrown error with info when the department has not space"
+    (is (try
+              (check-in {:waiting-room [1 2 3 4 5]} :waiting-room 6)
+              false
+            (catch ExceptionInfo e
+              (= {:person 6 :department :waiting-room} (ex-data e))
+             )))))
+
 
