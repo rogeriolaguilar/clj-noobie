@@ -1,4 +1,4 @@
-(ns clj-noobie.alura2)
+(ns clj-noobie.basics.alura2)
 
 ; TAIL RECURSION
 (println "; TAIL RECURSION")

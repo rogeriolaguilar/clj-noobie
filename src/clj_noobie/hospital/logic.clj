@@ -1,4 +1,4 @@
-(ns clj-noobie.hlogic)
+(ns clj-noobie.hospital.logic)
 
 (defn check-in
   [hospital queue-name name]
@@ -20,9 +20,6 @@
       )))
 
 
-(defn resolve
+(defn treat
   [hospital queue-name]
-
-  (update hospital queue-name pop)
-
-  )
+  (update hospital queue-name pop))

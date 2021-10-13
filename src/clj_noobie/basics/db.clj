@@ -1,4 +1,4 @@
-(ns clj_noobie.db)
+(ns clj_noobie.basics.db)
 
 (def order1 {:user 15
             :items { :mochila { :id :mochila :qtd 2 :unit-price 80}

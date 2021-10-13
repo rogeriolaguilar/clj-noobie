@@ -1,4 +1,4 @@
-(ns clj_noobie.alura3
+(ns clj_noobie.basics.alura3
   (:require [clj_noobie.db :as n.db]
             [clj_noobie.logic :as l.logic]))
 

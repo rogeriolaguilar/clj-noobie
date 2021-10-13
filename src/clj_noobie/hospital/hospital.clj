@@ -1,7 +1,7 @@
-(ns clj_noobie.hospital
+(ns clj_noobie.hospital.hospital
   (:use [clojure pprint])
-  (:require [clj_noobie.hmodel :as h.model]
-            [clj-noobie.hlogic :as h.logic]))
+  (:require [clj_noobie.hospital.model :as h.model]
+            [clj-noobie.hospital.logic :as h.logic]))
 
 
 (defn simulate-hospital []
@@ -15,7 +15,7 @@
   (def hospital (h.logic/check-in hospital :waiting-room "Person 6"))
   (def hospital (h.logic/check-in hospital :waiting-room "Person 7"))
 
-  (def hospital (h.logic/resolve hospital :waiting-room))
+  (def hospital (h.logic/treat hospital :waiting-room))
   hospital
   )
 ; run to  test
@@ -105,4 +105,5 @@
 (simulate-concurrent-atom)
 
 (println "In the prints its possible to see the retries performed by the swap! operation and one the atom has changed before the operation has finished")
+
 

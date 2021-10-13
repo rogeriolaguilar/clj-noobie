@@ -1,4 +1,4 @@
-(ns clj_noobie.logic
+(ns clj_noobie.basics.logic
   (:require [clj_noobie.db :as n.db]))
 ; requiring db just keep the test functions
 

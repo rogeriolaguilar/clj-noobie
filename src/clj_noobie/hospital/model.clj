@@ -1,5 +1,5 @@
-(ns clj_noobie.hmodel
-  (:use [clojure.pprint]))
+(ns clj_noobie.hospital.model
+  (:use [clojure pprint]))
 
 
 (let [queue clojure.lang.PersistentQueue/EMPTY]

@@ -1,4 +1,4 @@
-(ns clj-noobie.alura1)
+(ns clj-noobie.basics.alura1)
 
 ; Vectors
 (def prices [30 700 1000])
