@@ -11,18 +11,18 @@
 (defn delete-database []
   (d/delete-database db-uri))
 
-(def product_schema )
+(def product_schema)
 
 (defn create_schema [conn]
-  (d/transact conn [{:db/ident :product/name
-                      :db/valueType :db.type/string
-                      :db/cardinality :db.cardinality/one
-                      :db/doc "Product name"}
-                     {:db/ident :product/slug
-                      :db/valueType :db.type/string
-                      :db/cardinality :db.cardinality/one
-                      :db/doc "HTTP path to access the product"}
-                     {:db/ident :product/price
-                      :db/valueType :db.type/bigdec
-                      :db/cardinality :db.cardinality/one
-                      :db/doc "Price of a product"}]))
+  (d/transact conn [{:db/ident       :product/name
+                     :db/valueType   :db.type/string
+                     :db/cardinality :db.cardinality/one
+                     :db/doc         "Product name"}
+                    {:db/ident       :product/slug
+                     :db/valueType   :db.type/string
+                     :db/cardinality :db.cardinality/one
+                     :db/doc         "HTTP path to access the product"}
+                    {:db/ident       :product/price
+                     :db/valueType   :db.type/bigdec
+                     :db/cardinality :db.cardinality/one
+                     :db/doc         "Price of a product"}]))
