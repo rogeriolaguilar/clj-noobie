@@ -1,7 +1,7 @@
 (ns clj-noobie.datomic.logic
   (:use [clojure.pprint])
   (:require
-    [datomic.api :as db]
+    [datomic.api :as d]
     [clj-noobie.datomic.product :as d.product]
     [clj-noobie.datomic.db :as d.db]))
 
@@ -12,4 +12,10 @@
 (d.db/create_schema conn)
 
 (let [computer (d.product/build_product "Notebook" "notebook" 7888.88M)]
-  (db/transact conn [computer]))
+  (d/transact conn [computer]))
+
+(def db (d/db conn))
+
+;; Looking for registered entities that contains :product/name
+(d/q '[:find ?entity
+       :where [?entity :product/name]] db)
