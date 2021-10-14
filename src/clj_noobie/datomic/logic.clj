@@ -13,5 +13,3 @@
 
 (let [computer (d.product/build_product "Notebook" "notebook" 7888.88M)]
   (db/transact conn [computer]))
-
-
