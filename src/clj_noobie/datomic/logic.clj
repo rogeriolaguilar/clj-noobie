@@ -14,8 +14,52 @@
 (let [computer (d.product/build_product "Notebook" "notebook" 7888.88M)]
   (d/transact conn [computer]))
 
-(def db (d/db conn))
-
 ;; Looking for registered entities that contains :product/name
 (d/q '[:find ?entity
        :where [?entity :product/name]] db)
+
+; including just one off the identities :product/name
+(let [calculator {:product/name "Calculator"}]
+  (d/transact conn [calculator]))
+
+
+;; Returns error
+(let [watch {:product/name "Watch", :watch/slug nil}]
+  (d/transact conn [watch]))
+
+;; Create, Update, Retract
+;; d/transact returns a "future", to wait for the result you can use @
+;; recovering the temids
+(let [calculator (d.product/build_product "Watch 2" "watch_2" 888.5M)
+      result @(d/transact conn [calculator])
+      entity-id (first (vals (:tempids result)))]
+  (pprint entity-id)
+
+  (pprint "update product price")
+  (d/transact conn [[:db/add entity-id :product/price 99.9M]])
+
+  (pprint "Retracting product slug")
+  (d/transact conn [[:db/retract entity-id :product/slug]]))
+
+
+
+
+(d.db/delete-database)
+(def conn
+  (d.db/create-connection))
+(d.db/create_schema conn)
+
+
+
+(println "Inserting several products at once")
+(let [item1 (d.product/build_product "Watch 1" "watch_1" 1.05M)
+      item2 (d.product/build_product "Watch 2" "watch_2" 2.05M)
+      item3 (d.product/build_product "Watch 3" "watch_3" 3.05M)
+      item4 (d.product/build_product "Watch 4" "watch_4" 4.05M)]
+  (println "Transacting the items")
+  (let [result @(d/transact conn [item1 item2 item3 item4])]
+              (pprint result))
+
+  (println "Looking for the itens")
+  (d.db/find-all-products (d/db conn))
+  )

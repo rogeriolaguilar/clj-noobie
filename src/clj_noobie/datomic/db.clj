@@ -26,3 +26,7 @@
                      :db/valueType   :db.type/bigdec
                      :db/cardinality :db.cardinality/one
                      :db/doc         "Price of a product"}]))
+
+(defn find-all-products [db]
+  (d/q '[:find ?entity
+         :where [?entity :product/name]] db))
