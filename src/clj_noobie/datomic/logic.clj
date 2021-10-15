@@ -49,8 +49,6 @@
   (d.db/create-connection))
 (d.db/create_schema conn)
 
-
-
 (println "Inserting several products at once")
 (let [item1 (d.product/build_product "Watch 1" "watch_1" 1.05M)
       item2 (d.product/build_product "Watch 2" "watch_2" 2.05M)
@@ -71,10 +69,13 @@
 
 (println "Find product-name-and-slug")
 (pprint (d.db/find-product-name-and-slug (d/db conn)))
-
 (pprint (d.db/find-products-as-key-value (d/db conn)))
-
 (pprint (d.db/find-products-pull (d/db conn)))
-
 (pprint (d.db/find-products-all-fields (d/db conn)))
 
+; Query the past: use d/as-of to find the database in a given time
+(let [db (d/as-of (d/db conn) #inst "2021-10-15T18:37:39.175-00:00")]
+  (pprint (d.db/find-products-all-fields db)))
+
+; Filter by prices greater than a value
+(pprint (d.db/find-product-with-minimum-price (d/db conn) 3M))

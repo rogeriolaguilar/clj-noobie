@@ -35,6 +35,10 @@
          :where [?entity :product/name]] db))
 
 ; get one product id with the slug
+; IMPORTANT: when use params in your query, notice things
+; - We have to use ":in $ ?slug" in the query ($ represents db params)
+; - We have to pass this params to the "d/q" function
+; OBS: the $ in ":in $ ?slug" represents database passed to "d/q"
 (defn all-products-by-slug [db slug]
   (let [query '[:find ?entity
                 :in $ ?slug
@@ -72,3 +76,19 @@
 (defn find-products-all-fields [db]
   (d/q '[:find (pull ?product [*])
          :where [?product :product/name]] db))
+
+
+; We can use functions in the :where list to define the filters
+; WARN: The order matters!!!!
+; Datomic executes the functions in the defined order.
+; We define the execution plan!
+; USE THE MOST RESTRICTIVE FILTER FIRST to improve performance
+(defn find-product-with-minimum-price [db minimum-price]
+  (d/q '[:find ?name ?slug ?price
+         :in $ ?minimum-price
+         :keys name slug price
+         :where [?product :product/name ?name]
+         [?product :product/slug ?slug]
+         [?product :product/price ?price]
+         [(> ?price ?minimum-price)]] db minimum-price))
+
