@@ -23,7 +23,10 @@
                     {:db/ident       :product/price
                      :db/valueType   :db.type/bigdec
                      :db/cardinality :db.cardinality/one
-                     :db/doc         "Price of a product"}]))
+                     :db/doc         "Price of a product"}
+                    {:db/ident       :product/key-word
+                     :db/valueType   :db.type/string
+                     :db/cardinality :db.cardinality/many}]))
 
 (defn reset-db []
   (delete-database)

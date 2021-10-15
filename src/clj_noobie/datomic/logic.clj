@@ -79,3 +79,26 @@
 
 ; Filter by prices greater than a value
 (pprint (d.db/find-product-with-minimum-price (d/db conn) 3M))
+
+
+(println "Test \"many\" cardinality")
+;; Redefine scheme with the new attribute
+(d.db/create_schema conn)
+(let [product (d.product/build_product "Watch 1" "watch_1" 1.234M "key1")
+      created-product @(d/transact conn [product])
+      product-id (first (vals (:tempids created-product)))]
+
+  (println "Created product" product-id)
+
+  (d/transact conn [[:db/add product-id :product/key-word "key2"]
+                    [:db/add product-id :product/key-word "key3"]])
+
+  (println "After update 1")
+  (pprint (last (d.db/find-products-all-fields (d/db conn))))
+
+  (println "After update 2")
+  (d/transact conn [[:db/retract product-id :product/key-word "key2"]
+                    [:db/add product-id :product/name "Watch"]
+                    [:db/add product-id :product/key-word "key2222"]])
+
+  (pprint (last (d.db/find-products-all-fields (d/db conn)))))
