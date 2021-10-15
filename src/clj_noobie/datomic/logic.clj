@@ -16,7 +16,7 @@
 
 ;; Looking for registered entities that contains :product/name
 (d/q '[:find ?entity
-       :where [?entity :product/name]] db)
+       :where [?entity :product/name]] (d/db conn))
 
 ; including just one off the identities :product/name
 (let [calculator {:product/name "Calculator"}]
@@ -58,8 +58,23 @@
       item4 (d.product/build_product "Watch 4" "watch_4" 4.05M)]
   (println "Transacting the items")
   (let [result @(d/transact conn [item1 item2 item3 item4])]
-              (pprint result))
+    (pprint result))
 
   (println "Looking for the itens")
-  (d.db/find-all-products (d/db conn))
+  (pprint (d.db/find-all-products (d/db conn)))
+  (d.db/all-products-by-slug (d/db conn) "watch_1")
+
   )
+
+(println "Find slugs")
+(pprint (d.db/find-product-slugs (d/db conn)))
+
+(println "Find product-name-and-slug")
+(pprint (d.db/find-product-name-and-slug (d/db conn)))
+
+(pprint (d.db/find-products-as-key-value (d/db conn)))
+
+(pprint (d.db/find-products-pull (d/db conn)))
+
+(pprint (d.db/find-products-all-fields (d/db conn)))
+

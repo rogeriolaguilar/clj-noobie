@@ -11,8 +11,6 @@
 (defn delete-database []
   (d/delete-database db-uri))
 
-(def product_schema)
-
 (defn create_schema [conn]
   (d/transact conn [{:db/ident       :product/name
                      :db/valueType   :db.type/string
@@ -27,6 +25,50 @@
                      :db/cardinality :db.cardinality/one
                      :db/doc         "Price of a product"}]))
 
+(defn reset-db []
+  (delete-database)
+  (let [conn (create-connection)]
+    (create_schema conn)))
+
 (defn find-all-products [db]
   (d/q '[:find ?entity
          :where [?entity :product/name]] db))
+
+; get one product id with the slug
+(defn all-products-by-slug [db slug]
+  (let [query '[:find ?entity
+                :in $ ?slug
+                :where [?entity :product/slug ?slug]]]
+
+    (println "Running query:" query)
+    (d/q query db slug)))
+
+
+;; When the variable is not used, we can use _
+(defn find-product-slugs [db]
+  (d/q '[:find ?any-slug
+         :where [_ :product/slug ?any-slug]] db))
+
+;; Here we must use the ?product, or the result will be different!!!
+(defn find-product-name-and-slug [db]
+  (d/q '[:find ?name ?slug
+         :where [?product :product/name ?name]
+         [?product :product/slug ?slug]] db))
+
+;; Using the keys attribute to format the response
+;; The keys names can be different of datom names
+(defn find-products-as-key-value [db]
+  (d/q '[:find ?name ?slug ?price
+         :keys name slug price
+         :where [?product :product/name ?name]
+         [?product :product/slug ?slug]
+         [?product :product/price ?price]] db))
+
+
+(defn find-products-pull [db]
+  (d/q '[:find (pull ?product [:product/name :product/slug :product/price])
+         :where [?product :product/name]] db))
+
+(defn find-products-all-fields [db]
+  (d/q '[:find (pull ?product [*])
+         :where [?product :product/name]] db))
