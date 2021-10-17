@@ -30,9 +30,20 @@
                     {:db/ident       :product/id
                      :db/valueType   :db.type/uuid
                      :db/cardinality :db.cardinality/one
-                     :db/unique      :db.unique/identity}]))
+                     :db/unique      :db.unique/identity}
+                    {:db/ident       :product/category
+                     :db/valueType   :db.type/ref
+                     :db/cardinality :db.cardinality/one}
+                    {:db/ident       :category/id
+                     :db/valueType   :db.type/uuid
+                     :db/cardinality :db.cardinality/one
+                     :db/unique      :db.unique/identity}
+                    {:db/ident       :category/name
+                     :db/valueType   :db.type/string
+                     :db/cardinality :db.cardinality/one}]))
 
 (defn reset-db []
+  (println "Resetting the Database")
   (delete-database)
   (let [conn (create-connection)]
     (create_schema conn)

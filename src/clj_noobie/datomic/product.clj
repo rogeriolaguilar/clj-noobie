@@ -16,7 +16,7 @@
    :product/key-word key-word}))
 
 (defn build-product-random []
-  (let [name (str "Name " (rand 1000))
+  (let [name (str "Name " (rand-int 1000))
         slug (clojure.string/replace name #" " "_")
         price (bigdec (* (rand) 10000M))]
     (build-product name slug price)))
