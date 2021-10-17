@@ -109,7 +109,6 @@
 
 
 (def conn (d.db/reset-db))
-(pprint conn)
 ;(println "Create random product")
 (let [product (d.product/build-product-random)]
   (pprint product)
@@ -123,3 +122,27 @@
 (println "Find product by uuid manually (YOU NEED TO UPDATE THE UUID IN SCRIPT)")
 (pprint (d.db/find-product-by-id (d/db conn) #uuid"af2e16e5-adf5-46fa-8614-05ae91b2f9e9"))
 
+
+
+(def conn (d.db/reset-db))
+(let [product1 (d.product/build-product-random)
+      p1 (assoc product1 :product/key-word "A1")
+      p2 (assoc product1 :product/key-word "A2")]
+
+
+  (println "Saving p1")
+  (d/transact conn [p1])
+
+  (println "Get p1 from uuid")
+
+  (pprint (d/pull (d/db conn) '[*] [:product/id (:product/id p1)]))
+
+  (println "Print p2 before save: p1 and p2 has the same product/id, but different key-words")
+  (pprint p2)
+
+  (d/transact conn [p2])
+
+  (println "Print p2 after save. As it has the same id, p1 was recreated adding the new key-word")
+  (println "The key-word was defined with cardinality MANY!")
+  (pprint (d/pull (d/db conn) '[*] [:product/id (:product/id p2)]))
+  )
