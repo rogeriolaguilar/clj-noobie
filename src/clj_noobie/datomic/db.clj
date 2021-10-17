@@ -26,12 +26,17 @@
                      :db/doc         "Price of a product"}
                     {:db/ident       :product/key-word
                      :db/valueType   :db.type/string
-                     :db/cardinality :db.cardinality/many}]))
+                     :db/cardinality :db.cardinality/many}
+                    {:db/ident       :product/id
+                     :db/valueType   :db.type/uuid
+                     :db/cardinality :db.cardinality/one
+                     :db/unique      :db.unique/identity}]))
 
 (defn reset-db []
   (delete-database)
   (let [conn (create-connection)]
-    (create_schema conn)))
+    (create_schema conn)
+    conn))
 
 (defn find-all-products [db]
   (d/q '[:find ?entity
@@ -95,3 +100,10 @@
          [?product :product/price ?price]
          [(> ?price ?minimum-price)]] db minimum-price))
 
+; Fetch entity with all params by the Datomic auto-generated ID
+(defn find-product-by-dbid [db product-id]
+  (d/pull db '[*] product-id))
+
+; Find by product/id
+(defn find-product-by-id [db product-id]
+  (d/pull db '[*] [:product/id product-id]))

@@ -11,7 +11,7 @@
 ;(d.db/delete-database)
 (d.db/create_schema conn)
 
-(let [computer (d.product/build_product "Notebook" "notebook" 7888.88M)]
+(let [computer (d.product/build-product "Notebook" "notebook" 7888.88M)]
   (d/transact conn [computer]))
 
 ;; Looking for registered entities that contains :product/name
@@ -30,7 +30,7 @@
 ;; Create, Update, Retract
 ;; d/transact returns a "future", to wait for the result you can use @
 ;; recovering the temids
-(let [calculator (d.product/build_product "Watch 2" "watch_2" 888.5M)
+(let [calculator (d.product/build-product "Watch 2" "watch_2" 888.5M)
       result @(d/transact conn [calculator])
       entity-id (first (vals (:tempids result)))]
   (pprint entity-id)
@@ -50,10 +50,10 @@
 (d.db/create_schema conn)
 
 (println "Inserting several products at once")
-(let [item1 (d.product/build_product "Watch 1" "watch_1" 1.05M)
-      item2 (d.product/build_product "Watch 2" "watch_2" 2.05M)
-      item3 (d.product/build_product "Watch 3" "watch_3" 3.05M)
-      item4 (d.product/build_product "Watch 4" "watch_4" 4.05M)]
+(let [item1 (d.product/build-product "Watch 1" "watch_1" 1.05M)
+      item2 (d.product/build-product "Watch 2" "watch_2" 2.05M)
+      item3 (d.product/build-product "Watch 3" "watch_3" 3.05M)
+      item4 (d.product/build-product "Watch 4" "watch_4" 4.05M)]
   (println "Transacting the items")
   (let [result @(d/transact conn [item1 item2 item3 item4])]
     (pprint result))
@@ -84,7 +84,7 @@
 (println "Test \"many\" cardinality")
 ;; Redefine scheme with the new attribute
 (d.db/create_schema conn)
-(let [product (d.product/build_product "Watch 1" "watch_1" 1.234M "key1")
+(let [product (d.product/build-product "Watch 1" "watch_1" 1.234M "key1")
       created-product @(d/transact conn [product])
       product-id (first (vals (:tempids created-product)))]
 
@@ -102,3 +102,24 @@
                     [:db/add product-id :product/key-word "key2222"]])
 
   (pprint (last (d.db/find-products-all-fields (d/db conn)))))
+
+
+(println "Find by one product by its db id")
+(pprint (first (d.db/find-product-by-dbid (d/db conn) 17592186045424)))
+
+
+(def conn (d.db/reset-db))
+(pprint conn)
+;(println "Create random product")
+(let [product (d.product/build-product-random)]
+  (pprint product)
+  (println "Creating random product with id" (str (:product/id product)))
+  (d/transact conn [(d.product/build-product-random)])
+
+  (println "Finding product by id (uuid)")
+  (pprint (d.db/find-product-by-id (d/db conn) (:product/id product)))
+  )
+
+(println "Find product by uuid manually (YOU NEED TO UPDATE THE UUID IN SCRIPT)")
+(pprint (d.db/find-product-by-id (d/db conn) #uuid"af2e16e5-adf5-46fa-8614-05ae91b2f9e9"))
+
