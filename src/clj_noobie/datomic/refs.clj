@@ -14,7 +14,7 @@
       p3 (product/build-product-random)
       p3-id (:product/id p3)
       c1 (category/build-category-random)
-      conn (d.db/reset-db)
+      conn (d.db/reset-db!)
       db-now (fn [] (d/db conn))]
 
   (println "Product before save")

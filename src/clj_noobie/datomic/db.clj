@@ -4,14 +4,14 @@
 
 (def db-uri "datomic:dev://localhost:4334/ecommerce")
 
-(defn create-connection []
+(defn create-connection! []
   (d/create-database db-uri)
   (d/connect db-uri))
 
-(defn delete-database []
+(defn delete-database! []
   (d/delete-database db-uri))
 
-(defn create_schema [conn]
+(defn create_schema! [conn]
   (d/transact conn [{:db/ident       :product/name
                      :db/valueType   :db.type/string
                      :db/cardinality :db.cardinality/one
@@ -42,11 +42,11 @@
                      :db/valueType   :db.type/string
                      :db/cardinality :db.cardinality/one}]))
 
-(defn reset-db []
+(defn reset-db! []
   (println "Resetting the Database")
-  (delete-database)
-  (let [conn (create-connection)]
-    (create_schema conn)
+  (delete-database!)
+  (let [conn (create-connection!)]
+    (create_schema! conn)
     conn))
 
 (defn find-all-products [db]

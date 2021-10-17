@@ -6,10 +6,10 @@
     [clj-noobie.datomic.db :as d.db]))
 
 (def conn
-  (d.db/create-connection))
+  (d.db/create-connection!))
 
 ;(d.db/delete-database)
-(d.db/create_schema conn)
+(d.db/create_schema! conn)
 
 (let [computer (d.product/build-product "Notebook" "notebook" 7888.88M)]
   (d/transact conn [computer]))
@@ -44,10 +44,10 @@
 
 
 
-(d.db/delete-database)
+(d.db/delete-database!)
 (def conn
-  (d.db/create-connection))
-(d.db/create_schema conn)
+  (d.db/create-connection!))
+(d.db/create_schema! conn)
 
 (println "Inserting several products at once")
 (let [item1 (d.product/build-product "Watch 1" "watch_1" 1.05M)
@@ -83,7 +83,7 @@
 
 (println "Test \"many\" cardinality")
 ;; Redefine scheme with the new attribute
-(d.db/create_schema conn)
+(d.db/create_schema! conn)
 (let [product (d.product/build-product "Watch 1" "watch_1" 1.234M "key1")
       created-product @(d/transact conn [product])
       product-id (first (vals (:tempids created-product)))]
@@ -108,7 +108,7 @@
 (pprint (first (d.db/find-product-by-dbid (d/db conn) 17592186045424)))
 
 
-(def conn (d.db/reset-db))
+(def conn (d.db/reset-db!))
 ;(println "Create random product")
 (let [product (d.product/build-product-random)]
   (pprint product)
@@ -124,7 +124,7 @@
 
 
 
-(def conn (d.db/reset-db))
+(def conn (d.db/reset-db!))
 (let [product1 (d.product/build-product-random)
       p1 (assoc product1 :product/key-word "A1")
       p2 (assoc product1 :product/key-word "A2")]
