@@ -60,7 +60,7 @@
 ; OBS: the $ in ":in $ ?slug" represents database passed to "d/q"
 (defn all-products-by-slug [db slug]
   (let [query '[:find ?entity
-                :in $ ?slug
+                  :in $ ?slug
                 :where [?entity :product/slug ?slug]]]
 
     (println "Running query:" query)
