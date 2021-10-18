@@ -152,8 +152,8 @@
   (println "NESTED QUERIES: The products with the most expensive price")
   (d/q '[:find (pull ?product [*])
          :where [(q '[:find (max ?price)
-                     :where [_ :product/price ?price]]
-                   $) [[?price]]]
+                      :where [_ :product/price ?price]]
+                    $) [[?price]]]
          [?product :product/price ?price]]
        (db-now))
 
