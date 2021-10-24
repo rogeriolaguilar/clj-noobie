@@ -7,10 +7,6 @@
 (defprotocol Payer
   (payment-method [patient]))
 
-(extend-type Patient
-  Payer
-  (payment-method [patient] :credit))
-
 (extend-type PatientHeathInsurance
   Payer
   (payment-method [patient] :health-insurance))

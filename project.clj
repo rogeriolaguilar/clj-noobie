@@ -5,5 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/" }
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.datomic/datomic-pro "1.0.6344"]
-                 [prismatic/schema "1.1.12"]]
+                 [prismatic/schema "1.1.12"]
+                 [org.clojure/test.check "0.10.0"]]
   :repl-options {:init-ns clj-noobie.core})
