@@ -1,6 +1,12 @@
-(ns clj-noobie.datomic.category)
+(ns clj-noobie.datomic.category
+  (:require [schema.core :as s])
+  (:import [java.util UUID]))
 
-(defn- uuid [] (java.util.UUID/randomUUID))
+(defn- uuid [] (UUID/randomUUID))
+
+(def Category
+  {:category/name s/Str
+   :category/id UUID })
 
 (defn build-category
   ([name]
